@@ -43,6 +43,7 @@ public class ActivityUtils {
         return null;
     }
 
+    // 封装的弹吐司的方法
     public void showToast(CharSequence msg){
         Activity activity = getActivity();
         if (activity != null){
@@ -61,6 +62,7 @@ public class ActivityUtils {
         }
     }
 
+    // 跳转页面
     public void startActivity(Class<? extends Activity> clazz){
         Activity activity = getActivity();
         if (activity == null) return;
