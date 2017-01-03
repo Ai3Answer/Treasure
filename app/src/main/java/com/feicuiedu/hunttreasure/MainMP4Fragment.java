@@ -3,6 +3,8 @@ package com.feicuiedu.hunttreasure;
 
 import android.content.res.AssetFileDescriptor;
 import android.graphics.SurfaceTexture;
+import android.location.Address;
+import android.location.Geocoder;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +20,7 @@ import com.feicuiedu.hunttreasure.commons.ActivityUtils;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.util.List;
 
 // 这个里面我们主要是进行视频的播放
 public class MainMP4Fragment extends Fragment implements TextureView.SurfaceTextureListener {
@@ -54,38 +57,38 @@ public class MainMP4Fragment extends Fragment implements TextureView.SurfaceText
     @Override
     public void onSurfaceTextureAvailable(final SurfaceTexture surface, int width, int height) {
         /**
-             * 1. 播放什么呢？找到我们播放的资源
-             * 2. 可以播放了：MediaPlayer来进行播放
-             *      创建、设置播放的资源、设置播放的同异步等。。
-             *      MediaPlayer有没有准备好：好了，就直接开始播放吧
-             * 3. 页面销毁了：MediaPlayer资源释放掉。。。
-             */
+         * 1. 播放什么呢？找到我们播放的资源
+         * 2. 可以播放了：MediaPlayer来进行播放
+         *      创建、设置播放的资源、设置播放的同异步等。。
+         *      MediaPlayer有没有准备好：好了，就直接开始播放吧
+         * 3. 页面销毁了：MediaPlayer资源释放掉。。。
+         */
 
-            try {
-                // 打开播放的资源文件
-                AssetFileDescriptor openFd = getContext().getAssets().openFd("welcome.mp4");
-                // 拿到MediaPlayer需要的资源类型
-                FileDescriptor fileDescriptor = openFd.getFileDescriptor();
-                mMediaPlayer = new MediaPlayer();
-                // 设置播放的资源给MediaPlayer
-                mMediaPlayer.setDataSource(fileDescriptor, openFd.getStartOffset(), openFd.getLength());
-                mMediaPlayer.prepareAsync();// 异步
-                // 设置监听：看有没有准备好，好了，开始播放
-                mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        try {
+            // 打开播放的资源文件
+            AssetFileDescriptor openFd = getContext().getAssets().openFd("welcome.mp4");
+            // 拿到MediaPlayer需要的资源类型
+            FileDescriptor fileDescriptor = openFd.getFileDescriptor();
+            mMediaPlayer = new MediaPlayer();
+            // 设置播放的资源给MediaPlayer
+            mMediaPlayer.setDataSource(fileDescriptor, openFd.getStartOffset(), openFd.getLength());
+            mMediaPlayer.prepareAsync();// 异步
+            // 设置监听：看有没有准备好，好了，开始播放
+            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
-                    // 确实准备好了，开始播放吧
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
+                // 确实准备好了，开始播放吧
+                @Override
+                public void onPrepared(MediaPlayer mp) {
 
-                        Surface mySurface = new Surface(surface);
-                        mMediaPlayer.setSurface(mySurface);
-                        mMediaPlayer.setLooping(true);// 循环播放
-                        mMediaPlayer.seekTo(0);
-                        mMediaPlayer.start();
-                    }
-                });
-            } catch (IOException e) {
-                mActivityUtils.showToast("媒体文件播放失败了");
+                    Surface mySurface = new Surface(surface);
+                    mMediaPlayer.setSurface(mySurface);
+                    mMediaPlayer.setLooping(true);// 循环播放
+                    mMediaPlayer.seekTo(0);
+                    mMediaPlayer.start();
+                }
+            });
+        } catch (IOException e) {
+            mActivityUtils.showToast("媒体文件播放失败了");
         }
     }
 
@@ -111,5 +114,6 @@ public class MainMP4Fragment extends Fragment implements TextureView.SurfaceText
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
+
     }
 }
