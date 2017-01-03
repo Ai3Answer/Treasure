@@ -36,4 +36,18 @@ View：视图
 Presenter：中间人
 View Interface：利用接口回调的方式实现数据获取(业务)过程中与视图的交互
 
+总结:
+用户模块：
+登录
+注册
+1. Toolbar的使用
+2. 自定义的对话框：DialogFragment
+3. MVP模式(重点！！！)
+任务：
+完成登录和注册：MVP
+预习：
+侧滑：DrawerLayout+NavigationView
+百度地图的展示
+
+
 
