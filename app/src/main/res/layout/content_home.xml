@@ -22,11 +22,11 @@
     </android.support.v7.widget.Toolbar>
 
     <!--地图视图的宝藏-->
-    <fragment
-        android:id="@+id/mapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar" />
+    <!--<fragment-->
+        <!--android:id="@+id/mapFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@+id/toolbar" />-->
 
 
     <!--列表视图宝藏-->

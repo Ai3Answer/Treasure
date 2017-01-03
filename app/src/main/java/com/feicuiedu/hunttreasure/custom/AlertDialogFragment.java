@@ -41,7 +41,7 @@ public class AlertDialogFragment extends DialogFragment{
         return new AlertDialog.Builder(getActivity())
                 .setTitle(title)
                 .setMessage(message)
-                .setNeutralButton(R.string.OK, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
