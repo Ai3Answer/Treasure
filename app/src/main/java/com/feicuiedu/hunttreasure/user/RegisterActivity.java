@@ -1,6 +1,7 @@
 package com.feicuiedu.hunttreasure.user;
 
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -11,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.feicuiedu.hunttreasure.R;
+import com.feicuiedu.hunttreasure.commons.RegexUtils;
+import com.feicuiedu.hunttreasure.custom.AlertDialogFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,12 +31,14 @@ public class RegisterActivity extends AppCompatActivity {
     EditText mEtConfirm;
     @BindView(R.id.btn_Register)
     Button mBtnRegister;
+    private String mUsername;
+    private String mPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 会触发onContentChanged方法
         setContentView(R.layout.activity_register);
-
     }
 
     @Override
@@ -76,13 +81,13 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable s) {
             // 处理文本输入之后的按钮事件
-            String username = mEtUsername.getText().toString();
-            String password = mEtPassword.getText().toString();
+            mUsername = mEtUsername.getText().toString();
+            mPassword = mEtPassword.getText().toString();
             String confirm = mEtConfirm.getText().toString();
-            boolean canregister = !(TextUtils.isEmpty(username)||
-                    TextUtils.isEmpty(password)||
+            boolean canregister = !(TextUtils.isEmpty(mUsername)||
+                    TextUtils.isEmpty(mPassword)||
                     TextUtils.isEmpty(confirm))
-                    &&password.equals(confirm);
+                    && mPassword.equals(confirm);
             mBtnRegister.setEnabled(canregister);
         }
     };
@@ -100,5 +105,24 @@ public class RegisterActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_Register)
     public void onClick() {
+        // 注册的视图和业务处理
+        if (RegexUtils.verifyUsername(mUsername)!=RegexUtils.VERIFY_SUCCESS){
+
+            // 显示一个错误的对话框：自定义一个
+            AlertDialogFragment.getInstances(
+                    getString(R.string.username_error),
+                    getString(R.string.username_rules))
+                    .show(getSupportFragmentManager(),"usernameError");
+            return;
+        }
+
+        if (RegexUtils.verifyPassword(mPassword)!=RegexUtils.VERIFY_SUCCESS){
+            // 显示一个错误的对话框
+            AlertDialogFragment.getInstances(
+                    getString(R.string.password_error),
+                    getString(R.string.password_rules))
+                    .show(getSupportFragmentManager(),"passwordError");
+            return;
+        }
     }
 }
