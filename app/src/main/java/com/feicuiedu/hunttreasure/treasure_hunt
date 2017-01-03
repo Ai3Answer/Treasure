@@ -30,4 +30,10 @@ View会通过Presenter来进行数据的请求(数据的真实获取是在model�
 Presenter：交互中间人
 View和Model沟通的桥梁
 
+使用：
+Model：数据的存取
+View：视图
+Presenter：中间人
+View Interface：利用接口回调的方式实现数据获取(业务)过程中与视图的交互
+
 

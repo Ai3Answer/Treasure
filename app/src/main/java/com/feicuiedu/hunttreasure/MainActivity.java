@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.feicuiedu.hunttreasure.commons.ActivityUtils;
-import com.feicuiedu.hunttreasure.user.LoginActivity;
+import com.feicuiedu.hunttreasure.user.login.LoginActivity;
 import com.feicuiedu.hunttreasure.user.register.RegisterActivity;
 
 import butterknife.ButterKnife;
