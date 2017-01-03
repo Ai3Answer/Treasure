@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.feicuiedu.hunttreasure.commons.ActivityUtils;
 import com.feicuiedu.hunttreasure.user.LoginActivity;
-import com.feicuiedu.hunttreasure.user.RegisterActivity;
+import com.feicuiedu.hunttreasure.user.register.RegisterActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
