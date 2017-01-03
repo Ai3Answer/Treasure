@@ -1,8 +1,11 @@
 package com.feicuiedu.hunttreasure.user;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.feicuiedu.hunttreasure.MainActivity;
 import com.feicuiedu.hunttreasure.R;
 import com.feicuiedu.hunttreasure.commons.ActivityUtils;
 import com.feicuiedu.hunttreasure.commons.RegexUtils;
@@ -176,7 +180,6 @@ public class RegisterActivity extends AppCompatActivity {
                 hideProgress();
                 showMessage("注册成功");
                 navigationToHome();
-
             }
         }.execute();
     }
@@ -185,6 +188,10 @@ public class RegisterActivity extends AppCompatActivity {
     private void navigationToHome() {
         mActivityUtils.startActivity(HomeActivity.class);
         finish();
+
+        // 发送本地广播去关闭页面
+        Intent intent = new Intent(MainActivity.MAIN_ACTION);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     // 显示信息
