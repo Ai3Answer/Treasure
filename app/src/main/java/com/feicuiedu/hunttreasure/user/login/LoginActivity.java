@@ -1,6 +1,9 @@
 package com.feicuiedu.hunttreasure.user.login;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -10,15 +13,18 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.feicuiedu.hunttreasure.MainActivity;
 import com.feicuiedu.hunttreasure.R;
+import com.feicuiedu.hunttreasure.commons.ActivityUtils;
 import com.feicuiedu.hunttreasure.commons.RegexUtils;
 import com.feicuiedu.hunttreasure.custom.AlertDialogFragment;
+import com.feicuiedu.hunttreasure.treasure.HomeActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements LoginView{
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -30,12 +36,17 @@ public class LoginActivity extends AppCompatActivity {
     Button mBtnLogin;
     private String mUsername;
     private String mPassword;
+    private ProgressDialog mDialog;
+
+    private ActivityUtils mActivityUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        mActivityUtils = new ActivityUtils(this);
 
         // toolbar
         setSupportActionBar(mToolbar);
@@ -100,5 +111,33 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         // 去做业务逻辑的处理了
+        new LoginPresenter(this).login();
+    }
+
+    //-------------------视图接口方法的具体实现----------------------
+    @Override
+    public void showProgress() {
+        mDialog = ProgressDialog.show(this, "登录", "亲，正在登录中，请稍后~");
+    }
+
+    @Override
+    public void hideProgress() {
+        if (mDialog!=null){
+            mDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void showMessage(String msg) {
+        mActivityUtils.showToast(msg);
+    }
+
+    @Override
+    public void navigationToHome() {
+        mActivityUtils.startActivity(HomeActivity.class);
+        finish();
+        // 发广播，关闭Main页面
+        Intent intent = new Intent(MainActivity.MAIN_ACTION);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }
