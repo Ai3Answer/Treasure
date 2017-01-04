@@ -23,6 +23,7 @@ import com.feicuiedu.hunttreasure.treasure.HomeActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class LoginActivity extends AppCompatActivity implements LoginView{
 
@@ -34,17 +35,19 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
     EditText mEtPassword;
     @BindView(R.id.btn_Login)
     Button mBtnLogin;
+
     private String mUsername;
     private String mPassword;
     private ProgressDialog mDialog;
 
     private ActivityUtils mActivityUtils;
+    private Unbinder mUnbinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
+        mUnbinder = ButterKnife.bind(this);
 
         mActivityUtils = new ActivityUtils(this);
 
@@ -139,5 +142,11 @@ public class LoginActivity extends AppCompatActivity implements LoginView{
         // 发广播，关闭Main页面
         Intent intent = new Intent(MainActivity.MAIN_ACTION);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mUnbinder.unbind();
     }
 }
