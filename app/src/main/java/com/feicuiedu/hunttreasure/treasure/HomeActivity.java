@@ -34,7 +34,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         // toolbar的处理
         setSupportActionBar(mToolbar);
-        if (getSupportActionBar()!=null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
@@ -64,7 +64,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
+
             case R.id.menu_hide:
                 break;
             case R.id.menu_logout:
@@ -77,9 +78,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     // 处理back返回键
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        }else {
+        } else {
             super.onBackPressed();
         }
     }

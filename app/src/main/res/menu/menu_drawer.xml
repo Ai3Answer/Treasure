@@ -33,6 +33,9 @@
             />
     </group>
 
-    <group android:id="@+id/group5"></group>
+    <group android:id="@+id/group5">
+        <item android:id="@+id/item1"
+              android:title=""/>
+    </group>
 
 </menu>

@@ -17,6 +17,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    // 参考Demo的添加jar包的方式
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+        }
+    }
+
+    // 声明我们使用的是自己项目下面的debug.keystore
+    signingConfigs {
+        // your debug keystore
+        debug{
+            storeFile file("debug.keystore")
+        }
+    }
 }
 
 dependencies {

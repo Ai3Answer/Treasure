@@ -53,5 +53,39 @@ View Interface：利用接口回调的方式实现数据获取(业务)过程中�
 1. Home页面的搭建：
 侧滑：DrawerLayout+NavigationView
 
+2. 百度地图的key获取：官网上：申请秘钥
+    1. 直接使用自己电脑里面的debug.keystore：在其他电脑上运行key会出错
+        cmd
+        cd .android
+        keytool -list -v -keystore debug.keystore
+        输入口令：android
+        SHA1值
+
+    2. 自己在项目里面放置一个debug.keystore
+        debug.keystore文件放置在app下面
+        指定我们使用的是项目下面的debug.keystore
+        cmd
+        cd 项目的debug.keystore放置的路径(cd .....app下面)
+        keytool -list -v -keystore debug.keystore
+        输入口令：android
+        SHA1值
+
+3. 集成的流程：
+1. 添加jar包：
+    1. 放置在libs下面
+    2. build.gradle里面需要指定so文件的路径
+    sourceSets {
+            main {
+                jniLibs.srcDir 'libs'
+            }
+        }
+    可以调出来，集成jar没有问题
+    SDKInitializer.initialize(getApplicationContext());
+2. 清单文件里面添加权限、开发者key
+    开发者的key：
+
+3. 布局里面添加MapView的控件
+4. 创建一个Application，里面初始化百度地图的SDK
+   SDKInitializer.initialize(getApplicationContext());
 
 
