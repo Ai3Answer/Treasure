@@ -217,12 +217,21 @@ public class MapFragment extends Fragment {
         @Override
         public boolean onMarkerClick(Marker marker) {
 
+            if (mCurrentMarker!=null){
+                if (mCurrentMarker!=marker){
+                    mCurrentMarker.setVisible(true);
+                }
+                mCurrentMarker.setVisible(true);
+            }
             mCurrentMarker = marker;
+
             // 点击Marker展示InfoWindow，当前的覆盖物不可见
             mCurrentMarker.setVisible(false);
 
             // 创建一个InfoWindow
             InfoWindow infoWindow = new InfoWindow(dot_expand, marker.getPosition(), 0, new InfoWindow.OnInfoWindowClickListener() {
+
+                // InfoWindow的监听
                 @Override
                 public void onInfoWindowClick() {
                     if (mCurrentMarker!=null){
