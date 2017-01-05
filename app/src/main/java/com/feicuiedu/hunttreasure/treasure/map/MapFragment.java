@@ -21,9 +21,14 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
 import com.feicuiedu.hunttreasure.R;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,6 +69,7 @@ public class MapFragment extends Fragment {
     FrameLayout mLayoutBottom;
     private BaiduMap mBaiduMap;
     private LocationClient mLocationClient;
+    private LatLng mCurrentLocation;
 
     @Nullable
     @Override
@@ -107,7 +113,6 @@ public class MapFragment extends Fragment {
 
         // 第四步，开始定位
         mLocationClient.start();
-
     }
 
     // 定位监听
@@ -127,9 +132,27 @@ public class MapFragment extends Fragment {
             double latitude = bdLocation.getLatitude();
             double longitude = bdLocation.getLongitude();
 
+            // 定位的经纬度的类
+            mCurrentLocation = new LatLng(latitude,longitude);
             String currentAddr = bdLocation.getAddrStr();
 
             Log.i("TAG","定位的位置："+currentAddr+"，经纬度："+latitude+","+longitude);
+
+            // 设置定位图层展示的数据
+            MyLocationData data = new MyLocationData.Builder()
+
+                    // 定位数据展示的经纬度
+                    .latitude(latitude)
+                    .longitude(longitude)
+                    .accuracy(100f)// 定位精度的大小
+                    .build();
+
+            // 定位数据展示到地图上
+            mBaiduMap.setMyLocationData(data);
+
+            // 移动到定位的地方，在地图上展示定位的信息：位置
+            moveToLocation();
+
         }
     };
 
@@ -193,5 +216,23 @@ public class MapFragment extends Fragment {
                 mBaiduMap.setMapStatus(MapStatusUpdateFactory.zoomIn());
                 break;
         }
+    }
+
+    // 定位的按钮：移动到定位的地方
+    @OnClick(R.id.tv_located)
+    public void moveToLocation(){
+
+        // 地图状态的设置：设置到定位的地方
+        MapStatus mapStatus = new MapStatus.Builder()
+                .target(mCurrentLocation)// 定位的位置
+                .rotate(0)
+                .overlook(0)
+                .build();
+
+        // 更新状态
+        MapStatusUpdate update = MapStatusUpdateFactory.newMapStatus(mapStatus);
+
+        // 更新展示的地图的状态
+        mBaiduMap.animateMapStatus(update);
     }
 }
