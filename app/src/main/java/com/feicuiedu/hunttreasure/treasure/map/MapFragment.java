@@ -3,6 +3,7 @@ package com.feicuiedu.hunttreasure.treasure.map;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapStatus;
@@ -58,6 +63,7 @@ public class MapFragment extends Fragment {
     @BindView(R.id.layout_bottom)
     FrameLayout mLayoutBottom;
     private BaiduMap mBaiduMap;
+    private LocationClient mLocationClient;
 
     @Nullable
     @Override
@@ -75,7 +81,57 @@ public class MapFragment extends Fragment {
         // 初始化百度地图
         initMapView();
 
+        // 初始化定位相关
+        initLocation();
+
     }
+
+    // 初始化定位相关
+    private void initLocation() {
+
+        // 前置：激活定位图层
+        mBaiduMap.setMyLocationEnabled(true);
+
+        // 第一步，初始化LocationClient类:LocationClient类必须在主线程中声明，需要Context类型的参数。
+        mLocationClient = new LocationClient(getContext().getApplicationContext());
+
+        // 第二步，配置定位SDK参数
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true);// 打开GPS
+        option.setCoorType("bd09ll");// 设置百度坐标类型，默认gcj02，会有偏差，bd9ll百度地图坐标类型，将无偏差的展示到地图上
+        option.setIsNeedAddress(true);// 需要地址信息
+        mLocationClient.setLocOption(option);
+
+        // 第三步，实现BDLocationListener接口
+        mLocationClient.registerLocationListener(mBDLocationListener);
+
+        // 第四步，开始定位
+        mLocationClient.start();
+
+    }
+
+    // 定位监听
+    private BDLocationListener mBDLocationListener = new BDLocationListener() {
+
+        // 获取到定位结果
+        @Override
+        public void onReceiveLocation(BDLocation bdLocation) {
+
+            // 如果没有拿到结果，重新请求
+            if (bdLocation==null){
+                mLocationClient.requestLocation();
+                return;
+            }
+
+            // 定位结果的经纬度
+            double latitude = bdLocation.getLatitude();
+            double longitude = bdLocation.getLongitude();
+
+            String currentAddr = bdLocation.getAddrStr();
+
+            Log.i("TAG","定位的位置："+currentAddr+"，经纬度："+latitude+","+longitude);
+        }
+    };
 
     // 初始化百度地图
     private void initMapView() {
@@ -121,7 +177,7 @@ public class MapFragment extends Fragment {
     // 指南针
     @OnClick(R.id.tv_compass)
     public void switchCompass(){
-        // 指南针有没有显示
+        // 指南针有没有显示:指南针是地图上的一个图标
         boolean compassEnabled = mBaiduMap.getUiSettings().isCompassEnabled();
         mBaiduMap.getUiSettings().setCompassEnabled(!compassEnabled);
     }
