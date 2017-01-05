@@ -53,7 +53,10 @@ View Interface：利用接口回调的方式实现数据获取(业务)过程中�
 1. Home页面的搭建：
 侧滑：DrawerLayout+NavigationView
 
-2. 百度地图的key获取：官网上：申请秘钥
+2. 百度地图的key获取：官网上：申请秘钥：SHA1 + 包名
+
+    SHA1：debug.keystore签名文件来获取的
+
     1. 直接使用自己电脑里面的debug.keystore：在其他电脑上运行key会出错
         cmd
         cd .android
@@ -70,9 +73,14 @@ View Interface：利用接口回调的方式实现数据获取(业务)过程中�
         输入口令：android
         SHA1值
 
-3. 集成的流程：
+    3. keytool命令不是内部或外部的命令：JDK的环境配置有没有问题
+        cd jdk安装的路径的bin下面
+        keytool -list -v -keystore (C:\Users\123\.adnroid\debug.keystore,如果你获取你项目下面的，要换成项目下面debug.keystore的路径)debug.keystore
+
+3. 集成的流程：(重点)
 1. 添加jar包：
-    1. 放置在libs下面
+    目的：使用jar里面的API：使用百度地图的工具：类、方法等
+    1. 将jar包和so文件，放置在libs下面
     2. build.gradle里面需要指定so文件的路径
     sourceSets {
             main {
@@ -82,10 +90,27 @@ View Interface：利用接口回调的方式实现数据获取(业务)过程中�
     可以调出来，集成jar没有问题
     SDKInitializer.initialize(getApplicationContext());
 2. 清单文件里面添加权限、开发者key
-    开发者的key：
 
-3. 布局里面添加MapView的控件
-4. 创建一个Application，里面初始化百度地图的SDK
+   开发者的key：作用：拿自己的东西在百度地图创建属于自己的应用
+
+3. 布局里面添加MapView的控件：只是验证我们集成的没有问题
+4. 创建一个TreasureApplication，里面初始化百度地图的SDK
    SDKInitializer.initialize(getApplicationContext());
+   注意：要在清单文件里面注册<application>name属性设置上
 
+问题：
+1. 只出现网格，没有出现地图：
+    1. 排除网络问题
+    2. appKey有问题：230错误，
+2. 初始化SDK.. 的问题：MapView ，SDK....
+    Application有没有写错：继承自Application，清单文件有没有设置上
+3. No config chosen: opengl:
+    模拟器运行，真机测试
+4. Message信息：百度地图内部封装的警告信息问题
 
+任务
+侧滑：实现
+一定要把集成的流程搞清楚！！！
+地图集成完成：地图可以展示
+预习：
+百度地图的使用
