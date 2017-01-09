@@ -2,6 +2,13 @@ package com.feicuiedu.hunttreasure.user.login;
 
 import android.os.AsyncTask;
 
+import com.feicuiedu.hunttreasure.net.NetClient;
+import com.feicuiedu.hunttreasure.user.User;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by gqq on 2017/1/3.
  */
@@ -15,34 +22,35 @@ public class LoginPresenter {
         mLoginView = loginView;
     }
 
-    public void login(){
-        new AsyncTask<Void, Integer, Void>() {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                mLoginView.showProgress();
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                mLoginView.hideProgress();
-                mLoginView.showMessage("登录成功");
-                mLoginView.navigationToHome();
-            }
-        }.execute();
+    public void login(User user) {
+        mLoginView.showProgress();
+        Call<LoginResult> loginResultCall = NetClient.getInstances().getTreasureApi().login(user);
+        loginResultCall.enqueue(mCallback);
     }
+
+    private Callback<LoginResult> mCallback = new Callback<LoginResult>() {
+
+        @Override
+        public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
+            mLoginView.hideProgress();
+            if (response.isSuccessful()){
+                LoginResult loginResult = response.body();
+                if (loginResult==null){
+                    mLoginView.showMessage("未知的错误");
+                    return;
+                }
+                if (loginResult.getCode()==1){
+                    // 真正的登录成功了
+                    mLoginView.navigationToHome();
+                }
+                mLoginView.showMessage(loginResult.getMsg());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<LoginResult> call, Throwable t) {
+            mLoginView.hideProgress();
+            mLoginView.showMessage("请求失败："+t.getMessage());
+        }
+    };
 }

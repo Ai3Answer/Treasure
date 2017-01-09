@@ -83,6 +83,7 @@ public class MapFragment extends Fragment {
     private LatLng mCurrentLocation;
     private LatLng mCurrentStatus;
     private Marker mCurrentMarker;
+    private MapView mMapView;
 
     @Nullable
     @Override
@@ -134,6 +135,8 @@ public class MapFragment extends Fragment {
 
         // 第四步，开始定位
         mLocationClient.start();
+
+
     }
 
     // 定位监听
@@ -143,8 +146,8 @@ public class MapFragment extends Fragment {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
 
-            // 如果没有拿到结果，重新请求
-            if (bdLocation==null){
+            // 如果没有拿到结果，重新请求：部分机型会失败
+            if (bdLocation == null) {
                 mLocationClient.requestLocation();
                 return;
             }
@@ -154,10 +157,10 @@ public class MapFragment extends Fragment {
             double longitude = bdLocation.getLongitude();
 
             // 定位的经纬度的类
-            mCurrentLocation = new LatLng(latitude,longitude);
+            mCurrentLocation = new LatLng(latitude, longitude);
             String currentAddr = bdLocation.getAddrStr();
 
-            Log.i("TAG","定位的位置："+currentAddr+"，经纬度："+latitude+","+longitude);
+            Log.i("TAG", "定位的位置：" + currentAddr + "，经纬度：" + latitude + "," + longitude);
 
             // 设置定位图层展示的数据
             MyLocationData data = new MyLocationData.Builder()
@@ -172,7 +175,9 @@ public class MapFragment extends Fragment {
             mBaiduMap.setMyLocationData(data);
 
             // 移动到定位的地方，在地图上展示定位的信息：位置
+
             moveToLocation();
+
 
         }
     };
@@ -197,13 +202,13 @@ public class MapFragment extends Fragment {
                 ;
 
         // 创建
-        MapView mapView = new MapView(getContext(), options);
+        mMapView = new MapView(getContext(), options);
 
         // 在布局上添加地图控件：0，代表第一位
-        mMapFrame.addView(mapView, 0);
+        mMapFrame.addView(mMapView, 0);
 
         // 拿到地图的操作类(控制器：操作地图等都是使用这个)
-        mBaiduMap = mapView.getMap();
+        mBaiduMap = mMapView.getMap();
 
         // 设置地图状态的监听
         mBaiduMap.setOnMapStatusChangeListener(mStatusChangeListener);
@@ -217,8 +222,8 @@ public class MapFragment extends Fragment {
         @Override
         public boolean onMarkerClick(Marker marker) {
 
-            if (mCurrentMarker!=null){
-                if (mCurrentMarker!=marker){
+            if (mCurrentMarker != null) {
+                if (mCurrentMarker != marker) {
                     mCurrentMarker.setVisible(true);
                 }
                 mCurrentMarker.setVisible(true);
@@ -234,7 +239,7 @@ public class MapFragment extends Fragment {
                 // InfoWindow的监听
                 @Override
                 public void onInfoWindowClick() {
-                    if (mCurrentMarker!=null){
+                    if (mCurrentMarker != null) {
                         mCurrentMarker.setVisible(true);
                     }
                     // 隐藏InfoWindow
@@ -270,7 +275,7 @@ public class MapFragment extends Fragment {
             LatLng target = mapStatus.target;
 
             // 确实地图的状态发生变化了
-            if (target !=MapFragment.this.mCurrentStatus){
+            if (target != MapFragment.this.mCurrentStatus) {
 
                 // TODO: 2017/1/5 会有数据的请求
 
@@ -284,28 +289,28 @@ public class MapFragment extends Fragment {
 
     // 卫星视图和普通视图的切换
     @OnClick(R.id.tv_satellite)
-    public void switchMapType(){
+    public void switchMapType() {
         int mapType = mBaiduMap.getMapType();// 获取当前的地图类型
         // 切换类型
-        mapType = (mapType==BaiduMap.MAP_TYPE_NORMAL)?BaiduMap.MAP_TYPE_SATELLITE:BaiduMap.MAP_TYPE_NORMAL;
+        mapType = (mapType == BaiduMap.MAP_TYPE_NORMAL) ? BaiduMap.MAP_TYPE_SATELLITE : BaiduMap.MAP_TYPE_NORMAL;
         // 卫星和普通的文字的显示
-        String msg  = mapType==BaiduMap.MAP_TYPE_NORMAL?"卫星":"普通";
+        String msg = mapType == BaiduMap.MAP_TYPE_NORMAL ? "卫星" : "普通";
         mBaiduMap.setMapType(mapType);
         mTvSatellite.setText(msg);
     }
 
     // 指南针
     @OnClick(R.id.tv_compass)
-    public void switchCompass(){
+    public void switchCompass() {
         // 指南针有没有显示:指南针是地图上的一个图标
         boolean compassEnabled = mBaiduMap.getUiSettings().isCompassEnabled();
         mBaiduMap.getUiSettings().setCompassEnabled(!compassEnabled);
     }
 
     // 地图的缩放
-    @OnClick({R.id.iv_scaleDown,R.id.iv_scaleUp})
-    public void scaleMap(View view){
-        switch (view.getId()){
+    @OnClick({R.id.iv_scaleDown, R.id.iv_scaleUp})
+    public void scaleMap(View view) {
+        switch (view.getId()) {
             case R.id.iv_scaleDown:
                 mBaiduMap.setMapStatus(MapStatusUpdateFactory.zoomOut());
                 break;
@@ -317,7 +322,7 @@ public class MapFragment extends Fragment {
 
     // 定位的按钮：移动到定位的地方
     @OnClick(R.id.tv_located)
-    public void moveToLocation(){
+    public void moveToLocation() {
 
         // 地图状态的设置：设置到定位的地方
         MapStatus mapStatus = new MapStatus.Builder()
@@ -342,7 +347,7 @@ public class MapFragment extends Fragment {
         MarkerOptions options = new MarkerOptions();
         options.position(latLng);// 覆盖物的位置
         options.icon(dot);// 覆盖物的图标
-        options.anchor(0.5f,0.5f);// 锚点位置：居中
+        options.anchor(0.5f, 0.5f);// 锚点位置：居中
 
         // 添加覆盖物
         mBaiduMap.addOverlay(options);
@@ -362,4 +367,11 @@ public class MapFragment extends Fragment {
 //                break;
 //        }
 //    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
 }
