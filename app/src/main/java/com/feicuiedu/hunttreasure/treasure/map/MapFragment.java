@@ -160,8 +160,6 @@ public class MapFragment extends Fragment {
             mCurrentLocation = new LatLng(latitude, longitude);
             String currentAddr = bdLocation.getAddrStr();
 
-            Log.i("TAG", "定位的位置：" + currentAddr + "，经纬度：" + latitude + "," + longitude);
-
             // 设置定位图层展示的数据
             MyLocationData data = new MyLocationData.Builder()
 

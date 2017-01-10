@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by gqq on 2017/1/9.
  */
-
 public class User {
 
 
@@ -13,15 +12,12 @@ public class User {
         this.name = name;
         Password = password;
     }
-
     /**
      * UserName : qjd
      * Password : 654321
      *
      * GsonFormat
      */
-
-
     @SerializedName("UserName")
     private String name;
 
