@@ -22,6 +22,7 @@ import com.feicuiedu.hunttreasure.commons.ActivityUtils;
 import com.feicuiedu.hunttreasure.commons.RegexUtils;
 import com.feicuiedu.hunttreasure.custom.AlertDialogFragment;
 import com.feicuiedu.hunttreasure.treasure.HomeActivity;
+import com.feicuiedu.hunttreasure.user.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -138,15 +139,8 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView{
 
             return;
         }
-        // 进行注册的功能：模拟场景进行注册，业务逻辑
-        /**
-         * 3个泛型：
-         * 3. 1. 启动任务输入的参数类型：请求的地址、上传的数据等类型
-         * 3. 2. 后台任务执行的进度：一般是Integer类型(int的包装类)
-         * 3. 3. 后台返回的结果类型：比如String类型、Void等
-         * 模拟注册，三个泛型都不需要的时候都可以设置成Void
-         */
-        new RegisterPresenter(this).register();
+        // 进行注册的功能
+        new RegisterPresenter(this).register(new User(mUsername,mPassword));
     }
 
     // 跳转页面

@@ -2,11 +2,15 @@ package com.feicuiedu.hunttreasure.net;
 
 import com.feicuiedu.hunttreasure.user.User;
 import com.feicuiedu.hunttreasure.user.login.LoginResult;
+import com.feicuiedu.hunttreasure.user.register.RegisterResult;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 
 /**
  * Created by gqq on 2017/1/9.
@@ -18,5 +22,9 @@ public interface TreasureApi {
     // 登录的请求
     @POST("/Handler/UserHandler.ashx?action=login")
     Call<LoginResult> login(@Body User user);
+
+    // 注册的请求
+    @POST("/Handler/UserHandler.ashx?action=register")
+    Call<RegisterResult> register(@Body User user);
 
 }
