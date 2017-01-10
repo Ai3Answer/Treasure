@@ -260,6 +260,7 @@ public class MapFragment extends Fragment implements MapMvpView{
                     }
                     // 隐藏InfoWindow
                     mBaiduMap.hideInfoWindow();
+
                 }
             });
             // 地图上显示一个InfoWindow
@@ -397,8 +398,27 @@ public class MapFragment extends Fragment implements MapMvpView{
         mBaiduMap.addOverlay(options);
     }
 
+    // 将定位的地址供其它调用获取
     public static LatLng getMyLocation(){
         return mCurrentLocation;
+    }
+
+
+    private static final int UI_MODE_NORMAL = 0;// 普通的视图
+    private static final int UI_MODE_SECLECT = 1;// 宝藏选中的视图
+    private static final int UI_MODE_HIDE = 2;// 埋藏宝藏的视图
+
+    // 把所有视图的变化都统一到一个方法里面:视图的切换是根据布局控件或其他(marker、infowindow)显示和隐藏来实现
+    public static void changeUIMode(int uiMode){
+        switch (uiMode){
+            case UI_MODE_NORMAL:
+                break;
+            case UI_MODE_SECLECT:
+                break;
+            case UI_MODE_HIDE:
+                break;
+        }
+
     }
 
     //---------------------数据请求的视图方法-------------------------

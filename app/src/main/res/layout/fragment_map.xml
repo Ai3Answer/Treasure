@@ -129,7 +129,7 @@
             android:id="@+id/layout_bottom"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_100"
-            android:visibility="visible">
+            android:visibility="gone">
             <!--用来显示宝藏信息的卡片(选中藏宝时)-->
             <com.feicuiedu.hunttreasure.custom.TreasureView
                 android:id="@+id/treasureView"
