@@ -37,6 +37,7 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.feicuiedu.hunttreasure.R;
+import com.feicuiedu.hunttreasure.treasure.Area;
 
 import java.util.Map;
 
@@ -78,12 +79,15 @@ public class MapFragment extends Fragment {
     EditText mEtTreasureTitle;
     @BindView(R.id.layout_bottom)
     FrameLayout mLayoutBottom;
+
     private BaiduMap mBaiduMap;
     private LocationClient mLocationClient;
     private LatLng mCurrentLocation;
     private LatLng mCurrentStatus;
     private Marker mCurrentMarker;
     private MapView mMapView;
+
+    private boolean mIsFirst = true;
 
     @Nullable
     @Override
@@ -136,7 +140,6 @@ public class MapFragment extends Fragment {
         // 第四步，开始定位
         mLocationClient.start();
 
-
     }
 
     // 定位监听
@@ -173,10 +176,11 @@ public class MapFragment extends Fragment {
             mBaiduMap.setMyLocationData(data);
 
             // 移动到定位的地方，在地图上展示定位的信息：位置
-
-            moveToLocation();
-
-
+            // 做一个判断：第一次进入页面自动移动，其他时候点击按钮移动
+            if (mIsFirst) {
+                moveToLocation();
+                mIsFirst = false;
+            }
         }
     };
 
@@ -275,10 +279,9 @@ public class MapFragment extends Fragment {
             // 确实地图的状态发生变化了
             if (target != MapFragment.this.mCurrentStatus) {
 
-                // TODO: 2017/1/5 会有数据的请求
+                // 地图状态发生变化以后实时获取当前区域内的宝藏
+                updateMapArea();
 
-                // 学习添加覆盖物的功能
-                addMarker(target);
 
                 MapFragment.this.mCurrentStatus = target;
             }
@@ -335,6 +338,26 @@ public class MapFragment extends Fragment {
         mBaiduMap.animateMapStatus(update);
     }
 
+    // 根据位置的变化，区域也发生了变化
+    private void updateMapArea() {
+
+        // 当前地图的状态
+        MapStatus mapStatus = mBaiduMap.getMapStatus();
+        // 当前的经纬度
+        double longitude = mapStatus.target.longitude;
+        double latitude = mapStatus.target.latitude;
+
+        // 根据地图的位置拿到的一个区域
+        Area area = new Area();
+        area.setMaxLat(Math.ceil(latitude));
+        area.setMaxLng(Math.ceil(longitude));
+        area.setMinLat(Math.floor(latitude));
+        area.setMinLng(Math.floor(longitude));
+
+        // 区域拿到了，要根据区域获取宝藏数据了
+
+    }
+
 
     private BitmapDescriptor dot = BitmapDescriptorFactory.fromResource(R.mipmap.treasure_dot);
     private BitmapDescriptor dot_expand = BitmapDescriptorFactory.fromResource(R.mipmap.treasure_expanded);
@@ -349,27 +372,5 @@ public class MapFragment extends Fragment {
 
         // 添加覆盖物
         mBaiduMap.addOverlay(options);
-    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        switch (requestCode){
-//            case ACCESS_LOCATION:
-//                if (grantResults[0]==PackageManager.PERMISSION_GRANTED){
-//                    // 获取到，做相应的处理
-//                    mLocationClient.requestLocation();
-//                }else {
-//
-//                }
-//                break;
-//        }
-//    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mMapView.onDestroy();
     }
 }

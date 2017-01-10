@@ -12,11 +12,16 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.target.Target;
+import com.feicuiedu.hunttreasure.MainActivity;
 import com.feicuiedu.hunttreasure.R;
+import com.feicuiedu.hunttreasure.commons.ActivityUtils;
 import com.feicuiedu.hunttreasure.user.UserPrefs;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -28,11 +33,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     NavigationView mNavigationView;
     private ImageView mIvIcon;
 
+    private ActivityUtils mActivityUtils;
+    private Unbinder mBind;
+    private Target<GlideDrawable> mTarget;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        ButterKnife.bind(this);
+        mBind = ButterKnife.bind(this);
+
+        mActivityUtils = new ActivityUtils(this);
 
         // toolbar的处理
         setSupportActionBar(mToolbar);
@@ -73,7 +84,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Glide.with(this)
                     .load(photo)
                     .error(R.mipmap.user_icon)
-                    .placeholder(R.mipmap.user_icon)// 设置占位图
+                    .placeholder(R.mipmap.user_icon)// 占位图
                     .into(mIvIcon);
         }
     }
@@ -86,7 +97,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.menu_hide:
                 break;
-            case R.id.menu_logout:
+            case R.id.menu_logout:// 退出登录
+
+                // 清空登录用户数据
+                UserPrefs.getInstance().clearUser();
+                mActivityUtils.startActivity(MainActivity.class);
+                finish();
                 break;
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
