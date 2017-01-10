@@ -20,7 +20,7 @@ public class NetClient {
 
 
     private static NetClient mNetClient;
-    private static final String BASE_URL = "http://admin.syfeicuiedu.com";
+    public static final String BASE_URL = "http://admin.syfeicuiedu.com";
     private TreasureApi mTreasureApi;
     private final Retrofit mRetrofit;
 

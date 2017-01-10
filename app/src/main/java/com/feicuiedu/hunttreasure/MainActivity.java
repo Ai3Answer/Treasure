@@ -4,12 +4,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.feicuiedu.hunttreasure.commons.ActivityUtils;
+import com.feicuiedu.hunttreasure.treasure.HomeActivity;
+import com.feicuiedu.hunttreasure.user.UserPrefs;
 import com.feicuiedu.hunttreasure.user.login.LoginActivity;
 import com.feicuiedu.hunttreasure.user.register.RegisterActivity;
 
@@ -37,6 +40,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mActivityUtils = new ActivityUtils(this);
         mUnbinder = ButterKnife.bind(this);
+
+        // 判断一下用户是不是登录过
+        SharedPreferences preferences = getSharedPreferences("user_info", MODE_PRIVATE);
+        if (preferences!=null){
+            if (preferences.getInt("key_tokenid",0)== UserPrefs.getInstance().getTokenid()){
+                mActivityUtils.startActivity(HomeActivity.class);
+                finish();
+            }
+        }
 
         // 注册本地的广播
         IntentFilter intentFilter = new IntentFilter(MAIN_ACTION);

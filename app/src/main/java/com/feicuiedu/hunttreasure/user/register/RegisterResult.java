@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * 注册的响应结果实体
  */
-public final class RegisterResult {
+public class RegisterResult {
 
     @SerializedName("tokenid")
     private int tokenId;

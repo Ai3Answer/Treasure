@@ -11,13 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.feicuiedu.hunttreasure.R;
+import com.feicuiedu.hunttreasure.user.UserPrefs;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -25,6 +26,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout mDrawerLayout;
     @BindView(R.id.navigation)
     NavigationView mNavigationView;
+    private ImageView mIvIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +53,29 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // 设置Navigation每一条的选中监听
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        ImageView ivIcon = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.iv_usericon);
-        ivIcon.setOnClickListener(new View.OnClickListener() {
+        mIvIcon = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.iv_usericon);
+        mIvIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo 更换头像
+
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // 更新侧滑上面的头像信息
+        String photo = UserPrefs.getInstance().getPhoto();
+        if (photo!=null){
+            // 加载头像
+            Glide.with(this)
+                    .load(photo)
+                    .error(R.mipmap.user_icon)
+                    .placeholder(R.mipmap.user_icon)// 设置占位图
+                    .into(mIvIcon);
+        }
     }
 
     // Navigation每一条的选中监听

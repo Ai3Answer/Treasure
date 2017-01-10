@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.feicuiedu.hunttreasure.net.NetClient;
 import com.feicuiedu.hunttreasure.user.User;
+import com.feicuiedu.hunttreasure.user.UserPrefs;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,6 +42,9 @@ public class LoginPresenter {
                 }
                 if (loginResult.getCode()==1){
                     // 真正的登录成功了
+                    // 保存头像和tokenId
+                    UserPrefs.getInstance().setPhoto(NetClient.BASE_URL+loginResult.getHeadpic());
+                    UserPrefs.getInstance().setTokenid(loginResult.getTokenid());
                     mLoginView.navigationToHome();
                 }
                 mLoginView.showMessage(loginResult.getMsg());

@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.feicuiedu.hunttreasure.net.NetClient;
 import com.feicuiedu.hunttreasure.user.User;
+import com.feicuiedu.hunttreasure.user.UserPrefs;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,6 +56,9 @@ public class RegisterPresenter {
                 }
                 // 不为空
                 if (result.getCode()==1){
+                    // 真正的注册成功
+                    // 保存用户token
+                    UserPrefs.getInstance().setTokenid(result.getTokenId());
                     mRegisterView.navigationToHome();
                 }
                 mRegisterView.showMessage(result.getMsg());
