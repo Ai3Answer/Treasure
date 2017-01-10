@@ -37,8 +37,11 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.feicuiedu.hunttreasure.R;
+import com.feicuiedu.hunttreasure.commons.ActivityUtils;
 import com.feicuiedu.hunttreasure.treasure.Area;
+import com.feicuiedu.hunttreasure.treasure.Treasure;
 
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -50,7 +53,7 @@ import butterknife.OnClick;
  */
 
 // 宝藏页面：地图的展示和宝藏数据的展示
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements MapMvpView{
 
     private static final int ACCESS_LOCATION = 100;
     @BindView(R.id.map_frame)
@@ -89,6 +92,9 @@ public class MapFragment extends Fragment {
 
     private boolean mIsFirst = true;
 
+    private ActivityUtils mActivityUtils;
+    private MapPresenter mPresenter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -109,6 +115,10 @@ public class MapFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ButterKnife.bind(this, view);
+
+        mPresenter = new MapPresenter(this);
+
+        mActivityUtils = new ActivityUtils(this);
 
         // 初始化百度地图
         initMapView();
@@ -355,6 +365,7 @@ public class MapFragment extends Fragment {
         area.setMinLng(Math.floor(longitude));
 
         // 区域拿到了，要根据区域获取宝藏数据了
+        mPresenter.getTreasure(area);
 
     }
 
@@ -363,14 +374,35 @@ public class MapFragment extends Fragment {
     private BitmapDescriptor dot_expand = BitmapDescriptorFactory.fromResource(R.mipmap.treasure_expanded);
 
     // 添加覆盖物
-    private void addMarker(LatLng latLng) {
+    private void addMarker(LatLng latLng,int treasureId) {
 
         MarkerOptions options = new MarkerOptions();
         options.position(latLng);// 覆盖物的位置
         options.icon(dot);// 覆盖物的图标
         options.anchor(0.5f, 0.5f);// 锚点位置：居中
 
+        // 将宝藏的id信息保存到marker
+        Bundle bundle = new Bundle();
+        bundle.putInt("id",treasureId);
+        options.extraInfo(bundle);
+
         // 添加覆盖物
         mBaiduMap.addOverlay(options);
+    }
+
+    //---------------------数据请求的视图方法-------------------------
+    @Override
+    public void showMessage(String msg) {
+        mActivityUtils.showToast(msg);
+    }
+
+    @Override
+    public void setData(List<Treasure> list) {
+        for (Treasure treasure :
+                list) {
+
+            LatLng latLng = new LatLng(treasure.getLatitude(),treasure.getLongitude());
+            addMarker(latLng,treasure.getId());
+        }
     }
 }
