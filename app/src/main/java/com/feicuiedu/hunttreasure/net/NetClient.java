@@ -2,6 +2,8 @@ package com.feicuiedu.hunttreasure.net;
 
 import com.feicuiedu.hunttreasure.user.User;
 import com.feicuiedu.hunttreasure.user.login.LoginResult;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -34,11 +36,15 @@ public class NetClient {
                 .addInterceptor(interceptor)
                 .build();
 
+        Gson gson = new GsonBuilder()
+                .setLenient()// 设置Gson的非严格模式
+                .create();
+
         // 初始化Retrofit
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
     }

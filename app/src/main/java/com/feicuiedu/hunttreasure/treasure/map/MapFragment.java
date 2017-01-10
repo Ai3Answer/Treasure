@@ -38,8 +38,10 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.feicuiedu.hunttreasure.R;
 import com.feicuiedu.hunttreasure.commons.ActivityUtils;
+import com.feicuiedu.hunttreasure.custom.TreasureView;
 import com.feicuiedu.hunttreasure.treasure.Area;
 import com.feicuiedu.hunttreasure.treasure.Treasure;
+import com.feicuiedu.hunttreasure.treasure.TreasureRepo;
 
 import java.util.List;
 import java.util.Map;
@@ -82,10 +84,12 @@ public class MapFragment extends Fragment implements MapMvpView{
     EditText mEtTreasureTitle;
     @BindView(R.id.layout_bottom)
     FrameLayout mLayoutBottom;
+    @BindView(R.id.treasureView)
+    TreasureView mTreasureView;
 
     private BaiduMap mBaiduMap;
     private LocationClient mLocationClient;
-    private LatLng mCurrentLocation;
+    private static LatLng mCurrentLocation;
     private LatLng mCurrentStatus;
     private Marker mCurrentMarker;
     private MapView mMapView;
@@ -261,6 +265,10 @@ public class MapFragment extends Fragment implements MapMvpView{
             // 地图上显示一个InfoWindow
             mBaiduMap.showInfoWindow(infoWindow);
 
+            int id = marker.getExtraInfo().getInt("id");
+            Treasure treasure = TreasureRepo.getInstance().getTreasure(id);
+            mTreasureView.bindTreasure(treasure);
+
             return false;
         }
     };
@@ -369,7 +377,6 @@ public class MapFragment extends Fragment implements MapMvpView{
 
     }
 
-
     private BitmapDescriptor dot = BitmapDescriptorFactory.fromResource(R.mipmap.treasure_dot);
     private BitmapDescriptor dot_expand = BitmapDescriptorFactory.fromResource(R.mipmap.treasure_expanded);
 
@@ -388,6 +395,10 @@ public class MapFragment extends Fragment implements MapMvpView{
 
         // 添加覆盖物
         mBaiduMap.addOverlay(options);
+    }
+
+    public static LatLng getMyLocation(){
+        return mCurrentLocation;
     }
 
     //---------------------数据请求的视图方法-------------------------
