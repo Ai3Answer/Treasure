@@ -398,8 +398,9 @@ public class MapFragment extends Fragment implements MapMvpView{
 
     @Override
     public void setData(List<Treasure> list) {
-        for (Treasure treasure :
-                list) {
+        for (Treasure treasure :list) {
+
+            Log.i("TAG","Data："+treasure.getId()+","+treasure.getLatitude()+","+treasure.getLongitude());
 
             LatLng latLng = new LatLng(treasure.getLatitude(),treasure.getLongitude());
             addMarker(latLng,treasure.getId());

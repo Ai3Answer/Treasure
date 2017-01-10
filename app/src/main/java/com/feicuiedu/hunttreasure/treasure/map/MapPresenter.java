@@ -3,6 +3,7 @@ package com.feicuiedu.hunttreasure.treasure.map;
 import com.feicuiedu.hunttreasure.net.NetClient;
 import com.feicuiedu.hunttreasure.treasure.Area;
 import com.feicuiedu.hunttreasure.treasure.Treasure;
+import com.feicuiedu.hunttreasure.treasure.TreasureRepo;
 
 import java.util.List;
 
@@ -18,12 +19,19 @@ import retrofit2.Response;
 public class MapPresenter {
 
     private MapMvpView mMvpView;
+    private Area mArea;
 
     public MapPresenter(MapMvpView mvpView) {
         mMvpView = mvpView;
     }
 
     public void getTreasure(Area area){
+
+        if (TreasureRepo.getInstance().isCached(area)){
+            return;
+        }
+
+        this.mArea = area;
         Call<List<Treasure>> listCall = NetClient.getInstances().getTreasureApi().getTreasureInArea(area);
         listCall.enqueue(mListCallback);
     }
@@ -40,6 +48,11 @@ public class MapPresenter {
                     mMvpView.showMessage("未知的错误");
                     return;
                 }
+
+                // 做缓存
+                TreasureRepo.getInstance().addTreasure(treasureList);
+                TreasureRepo.getInstance().cache(mArea);
+
                 // 拿到数据了：给MapFragment，在地图展示
                 mMvpView.setData(treasureList);
             }

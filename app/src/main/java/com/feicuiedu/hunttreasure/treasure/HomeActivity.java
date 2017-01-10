@@ -43,6 +43,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_home);
         mBind = ButterKnife.bind(this);
 
+        // 进入页面，将宝藏数据的缓存清空
+        TreasureRepo.getInstance().clear();
+
         mActivityUtils = new ActivityUtils(this);
 
         // toolbar的处理
