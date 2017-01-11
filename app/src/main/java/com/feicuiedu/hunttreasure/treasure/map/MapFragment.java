@@ -47,6 +47,7 @@ import com.feicuiedu.hunttreasure.custom.TreasureView;
 import com.feicuiedu.hunttreasure.treasure.Area;
 import com.feicuiedu.hunttreasure.treasure.Treasure;
 import com.feicuiedu.hunttreasure.treasure.TreasureRepo;
+import com.feicuiedu.hunttreasure.treasure.detail.TreasureDetailActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -414,6 +415,15 @@ public class MapFragment extends Fragment implements MapMvpView{
         MapStatusUpdate update = MapStatusUpdateFactory.newMapStatus(mapStatus);
         // 更新展示的地图的状态
         mBaiduMap.animateMapStatus(update);
+    }
+
+    // 宝藏显示的卡片的点击事件
+    @OnClick(R.id.treasureView)
+    public void clickTreasureView(){
+        // 跳转到详情页,拿到当前的Marker的宝藏，并传递过去
+        int id = mCurrentMarker.getExtraInfo().getInt("id");
+        Treasure treasure = TreasureRepo.getInstance().getTreasure(id);
+        TreasureDetailActivity.open(getContext(),treasure);
     }
 
     // 根据位置的变化，区域也发生了变化

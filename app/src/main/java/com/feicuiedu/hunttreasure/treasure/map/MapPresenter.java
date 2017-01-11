@@ -1,5 +1,7 @@
 package com.feicuiedu.hunttreasure.treasure.map;
 
+import android.util.Log;
+
 import com.feicuiedu.hunttreasure.net.NetClient;
 import com.feicuiedu.hunttreasure.treasure.Area;
 import com.feicuiedu.hunttreasure.treasure.Treasure;
@@ -41,6 +43,7 @@ public class MapPresenter {
         // 请求成功
         @Override
         public void onResponse(Call<List<Treasure>> call, Response<List<Treasure>> response) {
+
             if (response.isSuccessful()){
                 List<Treasure> treasureList = response.body();
                 if (treasureList==null){

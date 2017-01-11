@@ -125,7 +125,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-
             // MapFragment里面视图的普通的视图，可以退出
             if (mMapFragment.clickbackPrssed()) {
                 super.onBackPressed();

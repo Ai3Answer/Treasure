@@ -32,10 +32,11 @@
             android:layout_width="match_parent"
             android:layout_height="220dp" />
 
-        <com.feicuiedu.treasure.components.TreasureView
-            android:id="@+id/treasureView"
+        <com.feicuiedu.hunttreasure.custom.TreasureView
+            android:id="@+id/detail_treasure"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"></com.feicuiedu.hunttreasure.custom.TreasureView>
 
         <include
             layout="@layout/content_detail"
