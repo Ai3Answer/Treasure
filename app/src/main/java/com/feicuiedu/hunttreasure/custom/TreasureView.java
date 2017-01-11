@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
  * Created by gqq on 2017/1/10.
  */
 
+// 自定义的显示宝藏信息的卡片
 public class TreasureView extends RelativeLayout {
 
     @BindView(R.id.tv_treasureTitle)
@@ -69,8 +70,10 @@ public class TreasureView extends RelativeLayout {
             distance=0.00d;
         }
 
-        // 规范显示的样式
+        // 使用百度地图里面的计算的工具类计算出来的距离
         distance = DistanceUtil.getDistance(latLng,myLocation);
+
+        // 规范显示的样式
         DecimalFormat decimalFormat = new DecimalFormat("#0.00");
         String text = decimalFormat.format(distance/1000)+"km";
         mTvDistance.setText(text);

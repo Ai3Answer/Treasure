@@ -17,6 +17,7 @@ import com.bumptech.glide.request.target.Target;
 import com.feicuiedu.hunttreasure.MainActivity;
 import com.feicuiedu.hunttreasure.R;
 import com.feicuiedu.hunttreasure.commons.ActivityUtils;
+import com.feicuiedu.hunttreasure.treasure.map.MapFragment;
 import com.feicuiedu.hunttreasure.user.UserPrefs;
 
 import butterknife.BindView;
@@ -34,14 +35,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private ImageView mIvIcon;
 
     private ActivityUtils mActivityUtils;
-    private Unbinder mBind;
-    private Target<GlideDrawable> mTarget;
+    private MapFragment mMapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        mBind = ButterKnife.bind(this);
+        ButterKnife.bind(this);
+
+        // 通过id找到MapFragment
+        mMapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
 
         // 进入页面，将宝藏数据的缓存清空
         TreasureRepo.getInstance().clear();
@@ -99,6 +102,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
 
             case R.id.menu_hide:
+
+                // 切换到埋藏宝藏的视图
+                mMapFragment.changeUIMode(2);
+
                 break;
             case R.id.menu_logout:// 退出登录
 

@@ -86,6 +86,8 @@ public class MapFragment extends Fragment implements MapMvpView{
     FrameLayout mLayoutBottom;
     @BindView(R.id.treasureView)
     TreasureView mTreasureView;
+    @BindView(R.id.hide_treasure)
+    RelativeLayout mHideTreasure;
 
     private BaiduMap mBaiduMap;
     private LocationClient mLocationClient;
@@ -255,20 +257,22 @@ public class MapFragment extends Fragment implements MapMvpView{
                 // InfoWindow的监听
                 @Override
                 public void onInfoWindowClick() {
-                    if (mCurrentMarker != null) {
-                        mCurrentMarker.setVisible(true);
-                    }
-                    // 隐藏InfoWindow
-                    mBaiduMap.hideInfoWindow();
+
+                    // 切换回普通的视图
+                    changeUIMode(UI_MODE_NORMAL);
 
                 }
             });
             // 地图上显示一个InfoWindow
             mBaiduMap.showInfoWindow(infoWindow);
 
+            // 宝藏信息的取出和展示
             int id = marker.getExtraInfo().getInt("id");
             Treasure treasure = TreasureRepo.getInstance().getTreasure(id);
             mTreasureView.bindTreasure(treasure);
+
+            // 切换到宝藏选中视图
+            changeUIMode(UI_MODE_SECLECT);
 
             return false;
         }
@@ -408,17 +412,51 @@ public class MapFragment extends Fragment implements MapMvpView{
     private static final int UI_MODE_SECLECT = 1;// 宝藏选中的视图
     private static final int UI_MODE_HIDE = 2;// 埋藏宝藏的视图
 
+    private static int mUIMode = UI_MODE_NORMAL;
+
     // 把所有视图的变化都统一到一个方法里面:视图的切换是根据布局控件或其他(marker、infowindow)显示和隐藏来实现
-    public static void changeUIMode(int uiMode){
+    public void changeUIMode(int uiMode){
+
+        if (mUIMode==uiMode) return;
+        mUIMode = uiMode;
+
         switch (uiMode){
+            // 普通的视图
             case UI_MODE_NORMAL:
+                if (mCurrentMarker!=null){
+                    mCurrentMarker.setVisible(true);
+                }
+                mBaiduMap.hideInfoWindow();
+                mLayoutBottom.setVisibility(View.GONE);
+                mCenterLayout.setVisibility(View.GONE);
                 break;
+
+            // 宝藏选中(信息卡片展示的视图)
             case UI_MODE_SECLECT:
+                mLayoutBottom.setVisibility(View.VISIBLE);
+                mTreasureView.setVisibility(View.VISIBLE);
+                mCenterLayout.setVisibility(View.GONE);
+                mHideTreasure.setVisibility(View.GONE);
                 break;
+
+            // 宝藏埋藏的视图
             case UI_MODE_HIDE:
+                if (mCurrentMarker!=null){
+                    mCurrentMarker.setVisible(true);
+                }
+                mBaiduMap.hideInfoWindow();
+                mCenterLayout.setVisibility(View.VISIBLE);
+                mLayoutBottom.setVisibility(View.GONE);
+                mBtnHideHere.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mLayoutBottom.setVisibility(View.VISIBLE);
+                        mTreasureView.setVisibility(View.GONE);
+                        mHideTreasure.setVisibility(View.VISIBLE);
+                    }
+                });
                 break;
         }
-
     }
 
     //---------------------数据请求的视图方法-------------------------
@@ -430,8 +468,6 @@ public class MapFragment extends Fragment implements MapMvpView{
     @Override
     public void setData(List<Treasure> list) {
         for (Treasure treasure :list) {
-
-            Log.i("TAG","Data："+treasure.getId()+","+treasure.getLatitude()+","+treasure.getLongitude());
 
             LatLng latLng = new LatLng(treasure.getLatitude(),treasure.getLongitude());
             addMarker(latLng,treasure.getId());
