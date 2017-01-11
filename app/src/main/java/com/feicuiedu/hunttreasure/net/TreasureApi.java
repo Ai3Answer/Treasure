@@ -2,6 +2,8 @@ package com.feicuiedu.hunttreasure.net;
 
 import com.feicuiedu.hunttreasure.treasure.Area;
 import com.feicuiedu.hunttreasure.treasure.Treasure;
+import com.feicuiedu.hunttreasure.treasure.detail.TreasureDetail;
+import com.feicuiedu.hunttreasure.treasure.detail.TreasureDetailResult;
 import com.feicuiedu.hunttreasure.user.User;
 import com.feicuiedu.hunttreasure.user.login.LoginResult;
 import com.feicuiedu.hunttreasure.user.register.RegisterResult;
@@ -34,5 +36,9 @@ public interface TreasureApi {
     // 获取区域内的宝藏数据请求
     @POST("/Handler/TreasureHandler.ashx?action=show")
     Call<List<Treasure>> getTreasureInArea(@Body Area area);
+
+    // 宝藏详情的请求
+    @POST("/Handler/TreasureHandler.ashx?action=tdetails")
+    Call<List<TreasureDetailResult>> getTreasureDetail(@Body TreasureDetail treasureDetail);
 
 }

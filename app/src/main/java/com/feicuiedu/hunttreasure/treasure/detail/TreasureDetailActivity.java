@@ -18,14 +18,17 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.feicuiedu.hunttreasure.R;
+import com.feicuiedu.hunttreasure.commons.ActivityUtils;
 import com.feicuiedu.hunttreasure.custom.TreasureView;
 import com.feicuiedu.hunttreasure.treasure.Treasure;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 // 宝藏的详情页
-public class TreasureDetailActivity extends AppCompatActivity {
+public class TreasureDetailActivity extends AppCompatActivity implements TreasureDetailView{
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -38,6 +41,9 @@ public class TreasureDetailActivity extends AppCompatActivity {
 
     private static final String KEY_TREASURE = "key_treasure";
     private Treasure mTreasure;
+
+    private ActivityUtils mActivityUtils;
+    private TreasureDetailPresenter mTreasureDetailPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +68,10 @@ public class TreasureDetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        mTreasureDetailPresenter = new TreasureDetailPresenter(this);
+
+        mActivityUtils = new ActivityUtils(this);
+
         // 拿到传递过来的数据
         mTreasure = (Treasure) getIntent().getSerializableExtra(KEY_TREASURE);
 
@@ -77,6 +87,10 @@ public class TreasureDetailActivity extends AppCompatActivity {
 
         // 宝藏卡片的视图展示
         mTreasureView.bindTreasure(mTreasure);
+
+        // 去进行网络获取得到宝藏的详情
+        TreasureDetail treasureDetail = new TreasureDetail(mTreasure.getId());
+        mTreasureDetailPresenter.getTreasureDetail(treasureDetail);
     }
 
     // 地图和宝藏的展示
@@ -123,13 +137,29 @@ public class TreasureDetailActivity extends AppCompatActivity {
     // 处理toolbar上面的返回箭头
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()){
             case android.R.id.home:
                 finish();
                 break;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    // ------------------视图接口里面需要实现的方法----------------------
+    @Override
+    public void showMessage(String msg) {
+        mActivityUtils.showToast(msg);
+    }
+
+    @Override
+    public void setData(List<TreasureDetailResult> resultList) {
+
+        // 请求的数据有内容
+        if (resultList.size()>=1){
+            TreasureDetailResult result = resultList.get(0);
+            mTvDetail.setText(result.description);
+            return;
+        }
+        mTvDetail.setText("当前的宝藏没有详情信息");
     }
 }
