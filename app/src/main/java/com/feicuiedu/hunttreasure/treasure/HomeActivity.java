@@ -101,7 +101,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         switch (item.getItemId()) {
 
-            case R.id.menu_hide:
+            case R.id.menu_hide:// 埋藏宝藏
 
                 // 切换到埋藏宝藏的视图
                 mMapFragment.changeUIMode(2);
