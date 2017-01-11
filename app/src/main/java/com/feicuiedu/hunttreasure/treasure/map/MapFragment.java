@@ -108,6 +108,7 @@ public class MapFragment extends Fragment implements MapMvpView{
     private MapPresenter mPresenter;
     private GeoCoder mGeoCoder;
     private String mCurrentAddr;
+    private static String mLocationAddr;
 
     @Nullable
     @Override
@@ -222,7 +223,7 @@ public class MapFragment extends Fragment implements MapMvpView{
 
             // 定位的经纬度的类
             mCurrentLocation = new LatLng(latitude, longitude);
-            String currentAddr = bdLocation.getAddrStr();
+            mLocationAddr = bdLocation.getAddrStr();
 
             // 设置定位图层展示的数据
             MyLocationData data = new MyLocationData.Builder()
@@ -467,9 +468,14 @@ public class MapFragment extends Fragment implements MapMvpView{
         mBaiduMap.addOverlay(options);
     }
 
-    // 将定位的地址供其它调用获取
+    // 将定位的位置供其它调用获取
     public static LatLng getMyLocation(){
         return mCurrentLocation;
+    }
+
+    // 将定位的地址供其它调用获取
+    public static String getLocationAddr(){
+        return mLocationAddr;
     }
 
 
