@@ -528,4 +528,17 @@ public class MapFragment extends Fragment implements MapMvpView{
             addMarker(latLng,treasure.getId());
         }
     }
+
+    // 对外提供一个方法：什么时候可以退出了
+    public boolean clickbackPrssed(){
+
+        // 如果不是普通视图，切换成普通视图
+        if (mUIMode!=UI_MODE_NORMAL){
+            changeUIMode(UI_MODE_NORMAL);
+            return false;
+        }
+
+        // 是普通的视图：告诉HomeActivity，可以退出了
+        return true;
+    }
 }
