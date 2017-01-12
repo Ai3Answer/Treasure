@@ -22,6 +22,7 @@ import com.feicuiedu.hunttreasure.commons.ActivityUtils;
 import com.feicuiedu.hunttreasure.treasure.list.TreasureListFragment;
 import com.feicuiedu.hunttreasure.treasure.map.MapFragment;
 import com.feicuiedu.hunttreasure.user.UserPrefs;
+import com.feicuiedu.hunttreasure.user.account.AccountActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,7 +81,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         mIvIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // 跳转到个人信息的页面
+                mActivityUtils.startActivity(AccountActivity.class);
             }
         });
     }
@@ -97,6 +99,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     .load(photo)
                     .error(R.mipmap.user_icon)
                     .placeholder(R.mipmap.user_icon)// 占位图
+                    .dontAnimate()
                     .into(mIvIcon);
         }
     }
@@ -133,10 +136,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         MenuItem item = menu.findItem(R.id.action_toggle);
 
         // 根据显示的视图不一样，设置不一样的图标
-        if (mListFragment!=null&&mListFragment.isAdded()){
-            item.setIcon(R.drawable.ic_map);
-        }else {
+        if (mListFragment==null||!mListFragment.isAdded()){
             item.setIcon(R.drawable.ic_view_list);
+        }else {
+            item.setIcon(R.drawable.ic_map);
         }
         return true;
     }
@@ -144,9 +147,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     // 创建
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // 菜单的填充
         getMenuInflater().inflate(R.menu.menu_home,menu);
+        onPrepareOptionsMenu(menu);
         return true;
     }
 
