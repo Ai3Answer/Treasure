@@ -1,12 +1,14 @@
 package com.feicuiedu.hunttreasure.treasure;
 
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +19,7 @@ import com.bumptech.glide.request.target.Target;
 import com.feicuiedu.hunttreasure.MainActivity;
 import com.feicuiedu.hunttreasure.R;
 import com.feicuiedu.hunttreasure.commons.ActivityUtils;
+import com.feicuiedu.hunttreasure.treasure.list.TreasureListFragment;
 import com.feicuiedu.hunttreasure.treasure.map.MapFragment;
 import com.feicuiedu.hunttreasure.user.UserPrefs;
 
@@ -36,6 +39,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private ActivityUtils mActivityUtils;
     private MapFragment mMapFragment;
+    private TreasureListFragment mListFragment;
+    private FragmentManager mSupportFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +49,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
 
         // 通过id找到MapFragment
-        mMapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
+        mSupportFragmentManager = getSupportFragmentManager();
+        mMapFragment = (MapFragment) mSupportFragmentManager.findFragmentById(R.id.mapFragment);
 
         // 进入页面，将宝藏数据的缓存清空
         TreasureRepo.getInstance().clear();
@@ -117,6 +123,67 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    // 准备
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        // 选项菜单里面action_toggle的菜单项
+        MenuItem item = menu.findItem(R.id.action_toggle);
+
+        // 根据显示的视图不一样，设置不一样的图标
+        if (mListFragment!=null&&mListFragment.isAdded()){
+            item.setIcon(R.drawable.ic_map);
+        }else {
+            item.setIcon(R.drawable.ic_view_list);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    // 创建
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // 菜单的填充
+        getMenuInflater().inflate(R.menu.menu_home,menu);
+        return true;
+    }
+
+    // 选择某一个选项菜单项
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.action_toggle:
+                showListFragment();
+                // 更新选项菜单的视图:onPrepareOptionsMenu触发
+                invalidateOptionsMenu();
+                break;
+        }
+        return true;
+    }
+
+    // 显示或隐藏列表的视图
+    public void showListFragment(){
+
+        // 如果列表正在展示
+        if (mListFragment!=null&&mListFragment.isAdded()){
+            // 将Fragment弹出回退栈
+            mSupportFragmentManager.popBackStack();
+            // 移除Fragment
+            mSupportFragmentManager.beginTransaction().remove(mListFragment).commit();
+            return;
+        }
+        mListFragment = new TreasureListFragment();
+
+        // 在布局的fragment_container（Framelayout上展示Fragment）
+        mSupportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container,mListFragment)
+                // 添加到回退栈
+                .addToBackStack(null)
+                .commit();
     }
 
     // 处理back返回键

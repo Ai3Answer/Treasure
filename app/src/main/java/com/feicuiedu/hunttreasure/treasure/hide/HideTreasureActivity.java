@@ -14,7 +14,10 @@ import com.baidu.mapapi.model.LatLng;
 import com.feicuiedu.hunttreasure.R;
 import com.feicuiedu.hunttreasure.commons.ActivityUtils;
 import com.feicuiedu.hunttreasure.treasure.TreasureRepo;
+import com.feicuiedu.hunttreasure.treasure.map.MapFragment;
 import com.feicuiedu.hunttreasure.user.UserPrefs;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +36,7 @@ public class HideTreasureActivity extends AppCompatActivity implements HideTreas
     private ProgressDialog mDialog;
 
     private ActivityUtils mActivityUtils;
+    private static Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,7 @@ public class HideTreasureActivity extends AppCompatActivity implements HideTreas
 
     // 对外提供一个跳转的方法
     public static void open(Context context, String title, String address, LatLng latLng, double altitude) {
+        mContext = context;
         Intent intent = new Intent(context, HideTreasureActivity.class);
         intent.putExtra(KEY_TITLE, title);
         intent.putExtra(KEY_LOCATION, address);
