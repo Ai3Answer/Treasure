@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,7 @@ import com.feicuiedu.hunttreasure.treasure.Area;
 import com.feicuiedu.hunttreasure.treasure.Treasure;
 import com.feicuiedu.hunttreasure.treasure.TreasureRepo;
 import com.feicuiedu.hunttreasure.treasure.detail.TreasureDetailActivity;
+import com.feicuiedu.hunttreasure.treasure.hide.HideTreasureActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -172,7 +174,7 @@ public class MapFragment extends Fragment implements MapMvpView{
                 return;
             }
 
-            // 拿到反地理编码得到的位置信息
+            // 拿到反地理编码得到的地址信息
             mCurrentAddr = reverseGeoCodeResult.getAddress();
 
             // 将地址信息给TextView设置上
@@ -425,6 +427,19 @@ public class MapFragment extends Fragment implements MapMvpView{
         int id = mCurrentMarker.getExtraInfo().getInt("id");
         Treasure treasure = TreasureRepo.getInstance().getTreasure(id);
         TreasureDetailActivity.open(getContext(),treasure);
+    }
+
+    // 点击宝藏标题录入的卡片，跳转埋藏宝藏的详细页面
+    @OnClick(R.id.hide_treasure)
+    public void hideTreasure(){
+        String title = mEtTreasureTitle.getText().toString();
+        if (TextUtils.isEmpty(title)){
+            mActivityUtils.showToast("请输入宝藏标题");
+            return;
+        }
+        // 跳转到埋藏宝藏的详细页面
+        LatLng latLng = mBaiduMap.getMapStatus().target;
+        HideTreasureActivity.open(getContext(),title,mCurrentAddr,latLng,0);
     }
 
     // 根据位置的变化，区域也发生了变化
