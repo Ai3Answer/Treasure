@@ -138,8 +138,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }else {
             item.setIcon(R.drawable.ic_view_list);
         }
-
-        return super.onPrepareOptionsMenu(menu);
+        return true;
     }
 
     // 创建
