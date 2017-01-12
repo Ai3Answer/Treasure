@@ -553,6 +553,10 @@ public class MapFragment extends Fragment implements MapMvpView{
 
     @Override
     public void setData(List<Treasure> list) {
+
+        // 再次网络请求拿到数据添加覆盖物之前，清理之前的覆盖物
+        mBaiduMap.clear();// 清空地图上所有的覆盖物和infoWindow
+
         for (Treasure treasure :list) {
 
             LatLng latLng = new LatLng(treasure.getLatitude(),treasure.getLongitude());
