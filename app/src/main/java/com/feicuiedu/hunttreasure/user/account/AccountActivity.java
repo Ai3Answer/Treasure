@@ -49,7 +49,6 @@ public class AccountActivity extends AppCompatActivity {
         @Override
         public void toCamera() {
             Toast.makeText(AccountActivity.this, "到相机", Toast.LENGTH_SHORT).show();
-
         }
     };
 }

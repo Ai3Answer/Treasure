@@ -226,7 +226,26 @@ View Interface：利用接口回调的方式实现数据获取(业务)过程中�
 
 20170112
 埋藏宝藏:实现
-宝藏列表：
 
+    Retrofit+MVP模式
+    埋藏的地址、位置、描述等
+    注意：宝藏上传以后清除宝藏缓存
+        MapFragment里面setData方法里面首先清除百度地图上的覆盖物
+
+
+宝藏列表：
+1. Fragment的切换：在布局的Framelayout中只有一个TreasureListFragment的replace和remove
+2. 选项菜单：准备、创建、菜单项点击
+3. RecyclerView展示列表：自定义适配器，点击事件
+
+个人信息：
+自定义视图：IconSelectWindow
+构造方法中布局填充、接口回调处理两个按钮的事件
+
+任务：
+完成今天的内容：
+RecyclerView
+明天：
+头像的更新
 
 
