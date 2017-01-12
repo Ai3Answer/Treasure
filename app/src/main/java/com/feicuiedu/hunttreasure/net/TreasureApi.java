@@ -4,6 +4,8 @@ import com.feicuiedu.hunttreasure.treasure.Area;
 import com.feicuiedu.hunttreasure.treasure.Treasure;
 import com.feicuiedu.hunttreasure.treasure.detail.TreasureDetail;
 import com.feicuiedu.hunttreasure.treasure.detail.TreasureDetailResult;
+import com.feicuiedu.hunttreasure.treasure.hide.HideTreasure;
+import com.feicuiedu.hunttreasure.treasure.hide.HideTreasureResult;
 import com.feicuiedu.hunttreasure.user.User;
 import com.feicuiedu.hunttreasure.user.login.LoginResult;
 import com.feicuiedu.hunttreasure.user.register.RegisterResult;
@@ -40,5 +42,9 @@ public interface TreasureApi {
     // 宝藏详情的请求
     @POST("/Handler/TreasureHandler.ashx?action=tdetails")
     Call<List<TreasureDetailResult>> getTreasureDetail(@Body TreasureDetail treasureDetail);
+
+    // 埋藏宝藏的请求
+    @POST("/Handler/TreasureHandler.ashx?action=hide")
+    Call<HideTreasureResult> hideTreasure(@Body HideTreasure hideTreasure);
 
 }
