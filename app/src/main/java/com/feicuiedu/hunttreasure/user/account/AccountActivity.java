@@ -1,17 +1,20 @@
 package com.feicuiedu.hunttreasure.user.account;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.feicuiedu.hunttreasure.R;
+import com.feicuiedu.hunttreasure.commons.ActivityUtils;
 import com.feicuiedu.hunttreasure.custom.IconSelectWindow;
 import com.feicuiedu.hunttreasure.net.NetClient;
 import com.feicuiedu.hunttreasure.user.UserPrefs;
@@ -28,7 +31,7 @@ import butterknife.OnClick;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class AccountActivity extends AppCompatActivity {
+public class AccountActivity extends AppCompatActivity implements AccountView {
 
     @BindView(R.id.account_toolbar)
     Toolbar mToolbar;
@@ -36,12 +39,16 @@ public class AccountActivity extends AppCompatActivity {
     ImageView mIvIcon;
 
     private IconSelectWindow mSelectWindow;
+    private ProgressDialog mDialog;
+    private ActivityUtils mActivityUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
         ButterKnife.bind(this);
+
+        mActivityUtils = new ActivityUtils(this);
 
         // toolBar
         setSupportActionBar(mToolbar);
@@ -90,11 +97,11 @@ public class AccountActivity extends AppCompatActivity {
     // 用一个第三方的库：到相册、到相机、剪切的功能：photoCropper
     /**
      * 1. 依赖：compile 'org.hybridsquad.android.photocropper:library:2.1.0'
-     *    清单合并的问题：aar
+     * 清单合并的问题：aar
      * 2. 使用：
-     *      1. 拿到结果处理
-     *      2. 处理的回调
-     *      3. 分别调用到相册到相机：之前一定要清理上次剪切的图片的缓存
+     * 1. 拿到结果处理
+     * 2. 处理的回调
+     * 3. 分别调用到相册到相机：之前一定要清理上次剪切的图片的缓存
      */
 
     private IconSelectWindow.Listener listener = new IconSelectWindow.Listener() {
@@ -132,7 +139,7 @@ public class AccountActivity extends AppCompatActivity {
             // 拿到剪切完成以后的图片文件
             File file = new File(uri.getPath());
             // 要进行将图片上传到服务器：头像上传、更新一下
-            new AccountPresenter().uploadPhoto(file);
+            new AccountPresenter(AccountActivity.this).uploadPhoto(file);
         }
 
         // 取消
@@ -167,5 +174,44 @@ public class AccountActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         // 处理得到结果
         CropHelper.handleResult(cropHandler, requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (cropHandler.getCropParams() != null)
+            CropHelper.clearCachedCropFile(cropHandler.getCropParams().uri);
+        super.onDestroy();
+    }
+
+    //----------------视图接口里面的方法------------------
+    @Override
+    public void showProgress() {
+        mDialog = ProgressDialog.show(this, "头像上传", "正在上传中~");
+    }
+
+    @Override
+    public void hideProgress() {
+        if (mDialog != null) {
+            mDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void showMessage(String msg) {
+        mActivityUtils.showToast(msg);
+    }
+
+    @Override
+    public void updatePhoto(String photoUrl) {
+
+        // 更新页面的头像
+        if (photoUrl!=null){
+            Glide.with(this)
+                    .load(photoUrl)
+                    .error(R.mipmap.user_icon)
+                    .placeholder(R.mipmap.user_icon)// 占位图
+                    .dontAnimate()
+                    .into(mIvIcon);
+        }
     }
 }

@@ -9,6 +9,8 @@ import com.feicuiedu.hunttreasure.treasure.detail.TreasureDetailResult;
 import com.feicuiedu.hunttreasure.treasure.hide.HideTreasure;
 import com.feicuiedu.hunttreasure.treasure.hide.HideTreasureResult;
 import com.feicuiedu.hunttreasure.user.User;
+import com.feicuiedu.hunttreasure.user.account.Update;
+import com.feicuiedu.hunttreasure.user.account.UpdateResult;
 import com.feicuiedu.hunttreasure.user.account.UploadResult;
 import com.feicuiedu.hunttreasure.user.login.LoginResult;
 import com.feicuiedu.hunttreasure.user.register.RegisterResult;
@@ -60,12 +62,16 @@ public interface TreasureApi {
      * @return
      */
     // 两种方式
-//    @Multipart
-//    @POST("/Handler/UserLoadPicHandler1.ashx")
-//    Call<UploadResult> upload(@Part("file\";filename=\"image.png\"") RequestBody body);
+    @Multipart
+    @POST("/Handler/UserLoadPicHandler1.ashx")
+    Call<UploadResult> upload(@Part("file\";filename=\"image.png\"") RequestBody body);
 
     @Multipart
     @POST("/Handler/UserLoadPicHandler1.ashx")
     Call<UploadResult> upload(@Part MultipartBody.Part part);
+
+    // 更新头像
+    @POST("/Handler/UserHandler.ashx?action=update")
+    Call<UpdateResult> update(@Body Update update);
 
 }
