@@ -13,15 +13,20 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.feicuiedu.hunttreasure.R;
 import com.feicuiedu.hunttreasure.custom.IconSelectWindow;
+import com.feicuiedu.hunttreasure.net.NetClient;
 import com.feicuiedu.hunttreasure.user.UserPrefs;
 
 import org.hybridsquad.android.library.CropHandler;
 import org.hybridsquad.android.library.CropHelper;
 import org.hybridsquad.android.library.CropParams;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class AccountActivity extends AppCompatActivity {
 
@@ -124,8 +129,10 @@ public class AccountActivity extends AppCompatActivity {
         // 图片剪切完以后结果
         @Override
         public void onPhotoCropped(Uri uri) {
-            String path = uri.getPath();
-            Toast.makeText(AccountActivity.this, "path："+path, Toast.LENGTH_SHORT).show();
+            // 拿到剪切完成以后的图片文件
+            File file = new File(uri.getPath());
+            // 要进行将图片上传到服务器：头像上传、更新一下
+            new AccountPresenter().uploadPhoto(file);
         }
 
         // 取消

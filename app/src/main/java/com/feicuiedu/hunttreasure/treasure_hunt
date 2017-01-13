@@ -248,4 +248,9 @@ RecyclerView
 明天：
 头像的更新
 
+20170113：
+1. 视图处理
+2. 图片剪切：photoCropper
+    1. 依赖
+    2. 跳转到相册和相机、剪切完成处理图片(CropHandler)
 

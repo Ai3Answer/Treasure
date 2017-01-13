@@ -1,5 +1,7 @@
 package com.feicuiedu.hunttreasure.net;
 
+import android.text.style.UpdateAppearance;
+
 import com.feicuiedu.hunttreasure.treasure.Area;
 import com.feicuiedu.hunttreasure.treasure.Treasure;
 import com.feicuiedu.hunttreasure.treasure.detail.TreasureDetail;
@@ -7,18 +9,23 @@ import com.feicuiedu.hunttreasure.treasure.detail.TreasureDetailResult;
 import com.feicuiedu.hunttreasure.treasure.hide.HideTreasure;
 import com.feicuiedu.hunttreasure.treasure.hide.HideTreasureResult;
 import com.feicuiedu.hunttreasure.user.User;
+import com.feicuiedu.hunttreasure.user.account.UploadResult;
 import com.feicuiedu.hunttreasure.user.login.LoginResult;
 import com.feicuiedu.hunttreasure.user.register.RegisterResult;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 
 /**
  * Created by gqq on 2017/1/9.
@@ -46,5 +53,19 @@ public interface TreasureApi {
     // 埋藏宝藏的请求
     @POST("/Handler/TreasureHandler.ashx?action=hide")
     Call<HideTreasureResult> hideTreasure(@Body HideTreasure hideTreasure);
+
+    /**
+     * 关于头像上传的：文件
+     * @param part
+     * @return
+     */
+    // 两种方式
+//    @Multipart
+//    @POST("/Handler/UserLoadPicHandler1.ashx")
+//    Call<UploadResult> upload(@Part("file\";filename=\"image.png\"") RequestBody body);
+
+    @Multipart
+    @POST("/Handler/UserLoadPicHandler1.ashx")
+    Call<UploadResult> upload(@Part MultipartBody.Part part);
 
 }
