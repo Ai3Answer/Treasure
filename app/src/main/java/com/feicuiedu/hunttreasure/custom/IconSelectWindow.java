@@ -22,7 +22,7 @@ import butterknife.OnClick;
 public class IconSelectWindow extends PopupWindow {
 
     // 接口：利用接口回调的方法实现布局里面相册相机两个按钮的事件
-    public interface Listener{
+    public interface Listener {
         // 到相册
         void toGallery();
 
@@ -34,12 +34,12 @@ public class IconSelectWindow extends PopupWindow {
     private Listener mListener;
 
     // 构造方法填充布局
-        public IconSelectWindow(@NonNull Activity activity,Listener listener) {
-            super(activity.getLayoutInflater().inflate(R.layout.window_select_icon, null),
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
+    public IconSelectWindow(@NonNull Activity activity, Listener listener) {
+        super(activity.getLayoutInflater().inflate(R.layout.window_select_icon, null),
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        ButterKnife.bind(this,getContentView());
+        ButterKnife.bind(this, getContentView());
 
         mActivity = activity;
         mListener = listener;

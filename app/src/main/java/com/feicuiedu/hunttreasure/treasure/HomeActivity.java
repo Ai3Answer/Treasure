@@ -136,10 +136,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         MenuItem item = menu.findItem(R.id.action_toggle);
 
         // 根据显示的视图不一样，设置不一样的图标
-        if (mListFragment==null||!mListFragment.isAdded()){
-            item.setIcon(R.drawable.ic_view_list);
-        }else {
+        if (mListFragment!=null&&mListFragment.isAdded()){
             item.setIcon(R.drawable.ic_map);
+        }else {
+            item.setIcon(R.drawable.ic_view_list);
         }
         return true;
     }
@@ -149,7 +149,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // 菜单的填充
         getMenuInflater().inflate(R.menu.menu_home,menu);
-        onPrepareOptionsMenu(menu);
         return true;
     }
 
@@ -169,6 +168,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     // 显示或隐藏列表的视图
     public void showListFragment(){
+
+        // add : show和hide
 
         // 如果列表正在展示
         if (mListFragment!=null&&mListFragment.isAdded()){

@@ -113,7 +113,6 @@ public class HideTreasureActivity extends AppCompatActivity implements HideTreas
 
         // 埋藏宝藏的网络请求的数据上传
         new HideTreasurePresenter(this).hideTreasure(hideTreasure);
-
     }
 
     //---------------视图接口里面的方法--------------
